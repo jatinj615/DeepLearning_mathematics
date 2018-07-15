@@ -14,14 +14,14 @@ X = np.vstack([X1, X2, X3])
 Y = np.array([0]*Nclass + [1]*Nclass + [2]*Nclass)
 
 plt.scatter(X[:, 0], X[:, 1], c = Y, s = 100, alpha= 0.5)
-
+plt.show()
 N = len(Y)
 T = np.zeros((N, K))
 for i in range(N):
     T[i, Y[i]] = 1
 
 def init_weights(shape):
-    return tf.Variables(tf.random_normal(shape, stddev=0.01))
+    return tf.Variable(tf.random_normal(shape, stddev=0.01))
 
 def forward(X, W1, b1, W2, b2):
     Z = tf.nn.sigmoid(tf.matmul(X, W1) + b1)
@@ -37,7 +37,7 @@ b2 = init_weights([K])
 
 py_x = forward(tfX, W1, b1, W2, b2)
 
-cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(py_x, T))
+cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits = py_x, labels = T))
 
 train_op = tf.train.GradientDescentOptimizer(0.05).minimize(cost)
 predict_op = tf.argmax(py_x, 1)
